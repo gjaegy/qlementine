@@ -41,7 +41,7 @@ protected:
         // Prevent moving from qlineedit_p.cpp:540
         evt->ignore();
         // Instead, place the button by ourselves.
-        auto moveEvent = reinterpret_cast<QMoveEvent*>(evt);
+        auto moveEvent = static_cast<QMoveEvent*>(evt);
         const int proposedX = moveEvent->pos().x();
         const auto* parentLineEdit = _button->parentWidget();
         const auto parentRect = parentLineEdit->rect();
@@ -62,9 +62,8 @@ protected:
         }
 
         const bool isRTL = parentLineEdit->layoutDirection() == Qt::RightToLeft;
-        bool alignLeft = (isLeading && !isRTL) || (!isLeading && isRTL);
-       
-        if (alignLeft) {
+              
+        if (isLeading && !isRTL) || (!isLeading && isRTL) {
           buttonX = parentRect.x() + spacing;
         } else {
           buttonX = parentRect.x() + parentRect.width() - buttonW - spacing;
