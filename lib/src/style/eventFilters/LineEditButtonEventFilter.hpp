@@ -53,14 +53,10 @@ protected:
         int buttonX = 0;
 
         bool isLeading = false;
-        if (const auto* toolButton = qobject_cast<QToolButton*>(_button)) {
-          if (const auto* action = toolButton->defaultAction()) {
-            if (proposedX < (parentRect.width() / 2)) {
+        if (proposedX < (parentRect.width() / 2)) {
               isLeading = true;
             }
-          }
-        }
-
+       
         const bool isRTL = parentLineEdit->layoutDirection() == Qt::RightToLeft;
               
         if (isLeading && !isRTL) || (!isLeading && isRTL) {
