@@ -59,7 +59,7 @@ protected:
        
         const bool isRTL = parentLineEdit->layoutDirection() == Qt::RightToLeft;
               
-        if (isLeading && !isRTL) || (!isLeading && isRTL) {
+        if ((isLeading && !isRTL) || (!isLeading && isRTL)) {
           buttonX = parentRect.x() + spacing;
         } else {
           buttonX = parentRect.x() + parentRect.width() - buttonW - spacing;
