@@ -12,6 +12,7 @@
 #include <QPointer>
 #include <QLineEdit>
 #include <QPainter>
+#include <QMoveEvent>
 
 namespace oclero::qlementine {
 class LineEditButtonEventFilter : public QObject {
@@ -40,14 +41,34 @@ protected:
         // Prevent moving from qlineedit_p.cpp:540
         evt->ignore();
         // Instead, place the button by ourselves.
+        auto moveEvent = reinterpret_cast<QMoveEvent*>(evt);
+        const int proposedX = moveEvent->pos().x();
         const auto* parentLineEdit = _button->parentWidget();
         const auto parentRect = parentLineEdit->rect();
         const auto& theme = _style ? _style->theme() : Theme{};
         const auto buttonH = theme.controlHeightMedium;
         const auto buttonW = buttonH;
         const auto spacing = theme.spacing / 2;
-        const auto buttonX = parentRect.x() + parentRect.width() - buttonW - spacing;
         const auto buttonY = parentRect.y() + (parentRect.height() - buttonH) / 2;
+        int buttonX = 0;
+
+        bool isLeading = false;
+        if (const auto* toolButton = qobject_cast<QToolButton*>(_button)) {
+          if (const auto* action = toolButton->defaultAction()) {
+            if (proposedX < (parentRect.width() / 2)) {
+              isLeading = true;
+            }
+          }
+        }
+
+        const bool isRTL = parentLineEdit->layoutDirection() == Qt::RightToLeft;
+        bool alignLeft = (isLeading && !isRTL) || (!isLeading && isRTL);
+       
+        if (alignLeft) {
+          buttonX = parentRect.x() + spacing;
+        } else {
+          buttonX = parentRect.x() + parentRect.width() - buttonW - spacing;
+        }
         _button->setGeometry(buttonX, buttonY, buttonW, buttonH);
         return true;
       } break;
