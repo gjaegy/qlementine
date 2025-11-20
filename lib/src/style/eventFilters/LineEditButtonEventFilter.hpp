@@ -41,7 +41,7 @@ protected:
         // Prevent moving from qlineedit_p.cpp:540
         evt->ignore();
         // Instead, place the button by ourselves.
-        auto moveEvent = static_cast<QMoveEvent*>(evt);
+        const auto* moveEvent = static_cast<QMoveEvent*>(evt);
         const auto proposedX = moveEvent->pos().x();
         const auto* parentLineEdit = _button->parentWidget();
         const auto parentRect = parentLineEdit->rect();
