@@ -42,7 +42,7 @@ protected:
         evt->ignore();
         // Instead, place the button by ourselves.
         auto moveEvent = static_cast<QMoveEvent*>(evt);
-        const int proposedX = moveEvent->pos().x();
+        const auto proposedX = moveEvent->pos().x();
         const auto* parentLineEdit = _button->parentWidget();
         const auto parentRect = parentLineEdit->rect();
         const auto& theme = _style ? _style->theme() : Theme{};
@@ -50,15 +50,15 @@ protected:
         const auto buttonW = buttonH;
         const auto spacing = theme.spacing / 2;
         const auto buttonY = parentRect.y() + (parentRect.height() - buttonH) / 2;
-        int buttonX = 0;
+        auto buttonX = 0;
 
-        bool isLeading = false;
+        auto isLeading = false;
         if (proposedX < (parentRect.width() / 2)) {
-              isLeading = true;
-            }
-       
-        const bool isRTL = parentLineEdit->layoutDirection() == Qt::RightToLeft;
-              
+          isLeading = true;
+        }
+
+        const auto isRTL = parentLineEdit->layoutDirection() == Qt::RightToLeft;
+
         if ((isLeading && !isRTL) || (!isLeading && isRTL)) {
           buttonX = parentRect.x() + spacing;
         } else {
