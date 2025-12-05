@@ -4,8 +4,8 @@
 
 Bugfixes:
 
-- Fix QCommandLinkbutton icon size
-- Fix typo in docs
+- Fix `QCommandLinkbutton` icon size.
+- Fix typo in docs (#124).
 
 ## v1.4.0
 
