@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.4.1
+
+Bugfixes:
+
+- Fix `QCommandLinkbutton` icon size.
+- Fix typo in docs (#124).
+
 ## v1.4.0
 
 New features:
