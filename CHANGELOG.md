@@ -5,6 +5,7 @@
 Bugfixes:
 
 - Fix QCommandLinkbutton icon size
+- Fix typo in docs
 
 ## v1.4.0
 

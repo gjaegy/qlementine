@@ -128,17 +128,18 @@ Example:
 | `semiTransparentColor4`             | color | Same as above but more contrast.                                                  |
 
 ### Boolean values
+
 Example:
 
 ```json
 {
-  "useSystemFont": false
+  "useSystemFonts": false
 }
 ```
 
-| Key                                 | Type  | Role                                                                            |
-| :---------------------------------- | :---: | :------------------------------------------------------------------------------ |
-| `useSystemFont`                     | bool  | Whether or not to use the system's font instead of `qlementine` provided fonts  |
+| Key              | Type | Role                                                                           |
+| :--------------- | :--: | :----------------------------------------------------------------------------- |
+| `useSystemFonts` | bool | Whether or not to use the system's font instead of `qlementine` provided fonts |
 
 ### Numeric Values
 
