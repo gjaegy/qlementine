@@ -1,11 +1,16 @@
 # Changelog
 
+## v1.4.2
+
+WIP
+
 ## v1.4.1
 
 Bugfixes:
 
 - Fix `QCommandLinkbutton` icon size.
 - Fix typo in docs (#124).
+- Handle correctly right-to-left in `LineEditButtonEventFilter`.
 
 ## v1.4.0
 

@@ -47,7 +47,7 @@ protected:
 
 private:
   static constexpr int flashActionBlinkDuration{ 60 }; // ms
-  static constexpr int flashActionDuration{ 2 * flashActionBlinkDuration }; // ms
+  static constexpr int flashActionDuration{ flashActionBlinkDuration }; // ms
   int _flashActionElapsedTime{ 0 }; // ms
   int _timerId{ -1 };
   QPointer<QMenu> _menu{ nullptr };

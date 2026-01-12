@@ -6,10 +6,12 @@ set(CMAKE_BUILD_PARALLEL_LEVEL $ENV{NUMBER_OF_PROCESSORS})
 # Set project information.
 project("qlementine"
   LANGUAGES CXX
-  VERSION 1.4.1.0
+  VERSION 1.4.2.0
   DESCRIPTION "Modern QStyle for desktop Qt applications."
 )
 set(PROJECT_COPYRIGHT "© Olivier Cléro, MIT License.")
+
+include(GNUInstallDirs)
 
 # Temporary hack to make it work with Qt6 <6.4.2 && >6.4.2 With Qt5, it was
 # "path/to/Qt/6.7.0/msvc2019_64/lib/cmake/Qt6", but with Qt6, it is now
