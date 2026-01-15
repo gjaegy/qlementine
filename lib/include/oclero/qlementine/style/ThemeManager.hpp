@@ -51,7 +51,7 @@ private:
 
 private:
   std::vector<Theme> _themes;
-  QPointer<QlementineStyle> _style{ nullptr };
+  QlementineStyle* _style{ nullptr };
   int _currentIndex{ -1 };
 };
 } // namespace oclero::qlementine
