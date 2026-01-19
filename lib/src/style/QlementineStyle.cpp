@@ -2229,10 +2229,14 @@ void QlementineStyle::drawControl(ControlElement ce, const QStyleOption* opt, QP
         const auto selected = getSelectionState(optItem->state);
         const auto hasCheck = features.testFlag(QStyleOptionViewItem::HasCheckIndicator);
         const auto checkBoxSize = _impl->theme.iconSize;
-        const auto checkBoxSpace = hasCheck ? checkBoxSize.width() + spacing : 0;
         const auto isChecked = hasCheck && optItem->checkState == Qt::Checked;
         const auto checked = isChecked ? CheckState::Checked : CheckState::NotChecked;
         const auto active = getActiveState(optItem->state);
+
+        const auto styleProxy = this->proxy();
+        QRect checkboxRect = styleProxy->subElementRect(SE_ItemViewItemCheckIndicator, optItem, w);
+        QRect iconRect = styleProxy->subElementRect(SE_ItemViewItemDecoration, optItem, w);
+        QRect textRect = styleProxy->subElementRect(SE_ItemViewItemText, optItem, w);
 
         // We show the selected color on the whole row, not only the cell.
         // Make it consistent with the background color in PE_PanelItemViewItem.
@@ -2242,9 +2246,6 @@ void QlementineStyle::drawControl(ControlElement ce, const QStyleOption* opt, QP
 
         // Checkbox, if any.
         if (hasCheck) {
-          const auto checkBoxX = fgRect.x();
-          const auto checkBoxY = fgRect.y() + (fgRect.height() - checkBoxSize.height()) / 2;
-          const auto checkboxRect = QRect{ QPoint{ checkBoxX, checkBoxY }, checkBoxSize };
           auto checkBoxState = optItem->state;
           //// TODO: How to know if checkbox hovered/pressed?
           //auto checkHovered = false;
@@ -2273,24 +2274,10 @@ void QlementineStyle::drawControl(ControlElement ce, const QStyleOption* opt, QP
         const auto& textColor =
           focus == FocusState::Focused ? fgColor : optItem->palette.color(paletteColorGroup, paletteColorRole);
 
-        const auto contentRect = fgRect.adjusted(checkBoxSpace, 0, 0, 0);
-        auto availableW = contentRect.width();
-        auto availableX = contentRect.x();
-
         // Icon.
-        if (availableW > 0 && hasIcon) {
-          const auto iconW = iconSize.width();
-          const auto iconSpacing = iconW > 0 ? spacing : 0;
+        if (iconRect.width() > 0 && hasIcon) {
           const auto pixmap = getPixmap(optItem->icon, iconSize, itemMouse, checked, w);
           const auto autoIconColor = listItemAutoIconColor(itemMouse, selected, focus, active, optItem->index, w);
-          const auto pixmapPixelRatio = pixmap.devicePixelRatio();
-          const auto pixmapW = pixmapPixelRatio != 0 ? (int) ((qreal) pixmap.width() / pixmapPixelRatio) : 0;
-          const auto pixmapH = pixmapPixelRatio != 0 ? (int) ((qreal) pixmap.height() / pixmapPixelRatio) : 0;
-          const auto pixmapX = availableX + (iconSize.width() - pixmapW) / 2; // Center the icon in the rect.
-          const auto pixmapY = contentRect.y() + (contentRect.height() - pixmapH) / 2;
-          const auto pixmapRect = QRect{ pixmapX, pixmapY, pixmapW, pixmapH };
-          availableW -= iconW + iconSpacing;
-          availableX += iconW + iconSpacing;
 
           if (itemMouse == MouseState::Disabled && autoIconColor == AutoIconColor::None) {
             const auto& bgColor =
@@ -2300,29 +2287,27 @@ void QlementineStyle::drawControl(ControlElement ce, const QStyleOption* opt, QP
             const auto opacity = selected == SelectionState::Selected ? 0.3 : 0.25;
             const auto backupOpacity = p->opacity();
             p->setOpacity(opacity * backupOpacity);
-            p->drawPixmap(pixmapRect, tintedPixmap);
+            p->drawPixmap(iconRect, tintedPixmap);
             p->setOpacity(backupOpacity);
           } else {
             const auto& colorizedPixmap = getColorizedPixmap(pixmap, autoIconColor, fgColor, textColor);
-            auto iconRect = subElementRect(SE_ItemViewItemDecoration, optItem, w);
-            iconRect.moveLeft(pixmapRect.left());
             p->drawPixmap(iconRect, colorizedPixmap);
           }
         }
 
         // Text.
-        if (availableW > 0 && !optItem->text.isEmpty()) {
+        if (textRect.width() > 0 && !optItem->text.isEmpty()) {
           const auto& fm = optItem->fontMetrics;
-          const auto elidedText = fm.elidedText(optItem->text, Qt::ElideRight, availableW, Qt::TextSingleLine);
-          const auto textX = availableX;
-          const auto textRect = QRect{ textX, contentRect.y(), availableW, contentRect.height() };
+          const int textMargin = styleProxy->pixelMetric(QStyle::PM_FocusFrameHMargin, nullptr, w) + 1;
+          QRect textRectAdjusted = textRect.adjusted(textMargin, 0, -textMargin, 0); // remove width padding
+          const auto elidedText = fm.elidedText(optItem->text, Qt::ElideRight, textRectAdjusted.width(), Qt::TextSingleLine);
           const auto textAlignment = optItem->displayAlignment;
           auto textFlags = Qt::AlignVCenter | Qt::AlignBaseline | Qt::TextSingleLine
                            | (textAlignment.testFlag(Qt::AlignRight) ? Qt::AlignRight : Qt::AlignLeft);
           p->setFont(optItem->font);
           p->setBrush(Qt::NoBrush);
           p->setPen(textColor);
-          p->drawText(textRect, int(textFlags), elidedText, nullptr);
+          p->drawText(textRectAdjusted, int(textFlags), elidedText, nullptr);
         }
       }
       return;
@@ -4079,6 +4064,9 @@ QSize QlementineStyle::sizeFromContents(
         const auto hasCheck = features.testFlag(QStyleOptionViewItem::HasCheckIndicator);
         const auto& checkSize = hasCheck ? _impl->theme.iconSize : QSize{ 0, 0 };
 
+        const auto isList = qobject_cast<const QListView*>(widget) != nullptr;
+        const auto iconMode = (isList && qobject_cast<const QListView*>(widget)->viewMode() == QListView::IconMode);
+
         auto font = QFont(widget->font());
         const auto fm = QFontMetrics(font);
         const auto textW = qlementine::textWidth(fm, optItem->text);
@@ -4086,7 +4074,8 @@ QSize QlementineStyle::sizeFromContents(
         const auto w = textW + 2 * hPadding + (iconSize.width() > 0 ? iconSize.width() + spacing : 0)
                        + (checkSize.width() > 0 ? checkSize.width() + spacing : 0);
         const auto defaultH = _impl->theme.controlHeightLarge;
-        const auto h = std::max({ iconSize.height() + spacing, textH + spacing, defaultH });
+        const auto h = iconMode ? std::max({ iconSize.height() + spacing + textH, defaultH })
+                                : std::max({ iconSize.height() + spacing, textH + spacing, defaultH });
         return QSize{ w, h };
       }
       break;
