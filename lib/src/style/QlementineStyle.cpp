@@ -2302,8 +2302,13 @@ void QlementineStyle::drawControl(ControlElement ce, const QStyleOption* opt, QP
           QRect textRectAdjusted = textRect.adjusted(textMargin, 0, -textMargin, 0); // remove width padding
           const auto elidedText = fm.elidedText(optItem->text, Qt::ElideRight, textRectAdjusted.width(), Qt::TextSingleLine);
           const auto textAlignment = optItem->displayAlignment;
-          auto textFlags = Qt::AlignVCenter | Qt::AlignBaseline | Qt::TextSingleLine
-                           | (textAlignment.testFlag(Qt::AlignRight) ? Qt::AlignRight : Qt::AlignLeft);
+          auto textFlags = Qt::AlignVCenter | Qt::AlignBaseline | Qt::TextSingleLine;
+          if (textAlignment.testFlag(Qt::AlignHCenter))
+            textFlags |= Qt::AlignHCenter;
+          if (textAlignment.testFlag(Qt::AlignRight))
+            textFlags |= Qt::AlignRight;
+          if (textAlignment.testFlag(Qt::AlignLeft))
+            textFlags |= Qt::AlignLeft;
           p->setFont(optItem->font);
           p->setBrush(Qt::NoBrush);
           p->setPen(textColor);
