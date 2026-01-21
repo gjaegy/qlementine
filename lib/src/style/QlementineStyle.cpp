@@ -2301,12 +2301,9 @@ void QlementineStyle::drawControl(ControlElement ce, const QStyleOption* opt, QP
           const auto elidedText = fm.elidedText(optItem->text, Qt::ElideRight, textRectAdjusted.width(), Qt::TextSingleLine);
           const auto textAlignment = optItem->displayAlignment;
           auto textFlags = Qt::AlignVCenter | Qt::AlignBaseline | Qt::TextSingleLine;
-          if (textAlignment.testFlag(Qt::AlignHCenter))
-            textFlags |= Qt::AlignHCenter;
-          if (textAlignment.testFlag(Qt::AlignRight))
-            textFlags |= Qt::AlignRight;
-          if (textAlignment.testFlag(Qt::AlignLeft))
-            textFlags |= Qt::AlignLeft;
+          textFlags = textAlignment.testFlag(Qt::AlignHCenter) ? textFlags | Qt::AlignHCenter
+                      : textAlignment.testFlag(Qt::AlignRight) ? textFlags | Qt::AlignRight
+                                                               : textFlags | Qt::AlignLeft;
           p->setFont(optItem->font);
           p->setBrush(Qt::NoBrush);
           p->setPen(textColor);
