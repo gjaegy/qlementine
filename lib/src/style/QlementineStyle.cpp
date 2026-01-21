@@ -1,4 +1,4 @@
-22// SPDX-FileCopyrightText: Olivier Cléro <oclero@hotmail.com>
+// SPDX-FileCopyrightText: Olivier Cléro <oclero@hotmail.com>
 // SPDX-License-Identifier: MIT
 
 #include <oclero/qlementine/style/QlementineStyle.hpp>
@@ -2220,9 +2220,6 @@ void QlementineStyle::drawControl(ControlElement ce, const QStyleOption* opt, QP
 
         // Foreground.
         const auto& features = optItem->features;
-        const auto isList = qobject_cast<const QListView*>(w) != nullptr;
-        const auto spacing = _impl->theme.spacing;
-        const auto hPadding = isList ? spacing : spacing / 2;
         const auto hasIcon = features.testFlag(QStyleOptionViewItem::HasDecoration) && !optItem->icon.isNull();
         const auto& iconSize = hasIcon ? optItem->decorationSize : QSize{ 0, 0 };
         const auto selected = getSelectionState(optItem->state);
