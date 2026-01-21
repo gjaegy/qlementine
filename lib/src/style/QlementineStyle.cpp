@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: Olivier Cléro <oclero@hotmail.com>
+22// SPDX-FileCopyrightText: Olivier Cléro <oclero@hotmail.com>
 // SPDX-License-Identifier: MIT
 
 #include <oclero/qlementine/style/QlementineStyle.hpp>
@@ -2225,10 +2225,8 @@ void QlementineStyle::drawControl(ControlElement ce, const QStyleOption* opt, QP
         const auto hPadding = isList ? spacing : spacing / 2;
         const auto hasIcon = features.testFlag(QStyleOptionViewItem::HasDecoration) && !optItem->icon.isNull();
         const auto& iconSize = hasIcon ? optItem->decorationSize : QSize{ 0, 0 };
-        const auto fgRect = optItem->rect.marginsRemoved(QMargins{ hPadding, 0, hPadding, 0 });
         const auto selected = getSelectionState(optItem->state);
         const auto hasCheck = features.testFlag(QStyleOptionViewItem::HasCheckIndicator);
-        const auto checkBoxSize = _impl->theme.iconSize;
         const auto isChecked = hasCheck && optItem->checkState == Qt::Checked;
         const auto checked = isChecked ? CheckState::Checked : CheckState::NotChecked;
         const auto active = getActiveState(optItem->state);
