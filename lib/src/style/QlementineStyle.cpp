@@ -2220,12 +2220,8 @@ void QlementineStyle::drawControl(ControlElement ce, const QStyleOption* opt, QP
 
         // Foreground.
         const auto& features = optItem->features;
-        const auto isList = qobject_cast<const QListView*>(w) != nullptr;
-        const auto spacing = _impl->theme.spacing;
-        const auto hPadding = isList ? spacing : spacing / 2;
         const auto hasIcon = features.testFlag(QStyleOptionViewItem::HasDecoration) && !optItem->icon.isNull();
         const auto& iconSize = hasIcon ? optItem->decorationSize : QSize{ 0, 0 };
-        const auto fgRect = optItem->rect.marginsRemoved(QMargins{ hPadding, 0, hPadding, 0 });
         const auto selected = getSelectionState(optItem->state);
         const auto hasCheck = features.testFlag(QStyleOptionViewItem::HasCheckIndicator);
         const auto checkBoxSize = _impl->theme.iconSize;
@@ -2302,8 +2298,10 @@ void QlementineStyle::drawControl(ControlElement ce, const QStyleOption* opt, QP
           QRect textRectAdjusted = textRect.adjusted(textMargin, 0, -textMargin, 0); // remove width padding
           const auto elidedText = fm.elidedText(optItem->text, Qt::ElideRight, textRectAdjusted.width(), Qt::TextSingleLine);
           const auto textAlignment = optItem->displayAlignment;
-          auto textFlags = Qt::AlignVCenter | Qt::AlignBaseline | Qt::TextSingleLine
-                           | (textAlignment.testFlag(Qt::AlignRight) ? Qt::AlignRight : Qt::AlignLeft);
+          auto textFlags = Qt::AlignVCenter | Qt::AlignBaseline | Qt::TextSingleLine;
+          textFlags = textAlignment.testFlag(Qt::AlignHCenter) ? textFlags | Qt::AlignHCenter
+                      : textAlignment.testFlag(Qt::AlignRight) ? textFlags | Qt::AlignRight
+                                                               : textFlags | Qt::AlignLeft;
           p->setFont(optItem->font);
           p->setBrush(Qt::NoBrush);
           p->setPen(textColor);
