@@ -50,8 +50,8 @@ private:
   static constexpr int flashActionDuration{ flashActionBlinkDuration }; // ms
   int _flashActionElapsedTime{ 0 }; // ms
   int _timerId{ -1 };
-  QPointer<QMenu> _menu{ nullptr };
-  QPointer<QAction> _action{ nullptr };
+  QMenu* _menu{ nullptr };
+  QAction* _action{ nullptr };
   std::function<void()> _onAnimationFinished{};
 };
 
