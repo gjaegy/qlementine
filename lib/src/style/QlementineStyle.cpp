@@ -2224,7 +2224,6 @@ void QlementineStyle::drawControl(ControlElement ce, const QStyleOption* opt, QP
         const auto& iconSize = hasIcon ? optItem->decorationSize : QSize{ 0, 0 };
         const auto selected = getSelectionState(optItem->state);
         const auto hasCheck = features.testFlag(QStyleOptionViewItem::HasCheckIndicator);
-        const auto checkBoxSize = _impl->theme.iconSize;
         const auto isChecked = hasCheck && optItem->checkState == Qt::Checked;
         const auto checked = isChecked ? CheckState::Checked : CheckState::NotChecked;
         const auto active = getActiveState(optItem->state);
@@ -4603,7 +4602,7 @@ int QlementineStyle::styleHint(StyleHint sh, const QStyleOption* opt, const QWid
 
     // FocusFrame
     case SH_FocusFrame_AboveWidget:
-      return true;
+      return false;
 
     // Wizard
     case SH_WizardStyle:
