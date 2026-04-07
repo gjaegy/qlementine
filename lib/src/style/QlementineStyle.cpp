@@ -4967,14 +4967,14 @@ void QlementineStyle::unpolish(QWidget* w) {
 
     // Remove the widget from the map.
     _polishedWidgetsWithEventFilters.erase(iter);
-
-    if (shouldHaveHoverEvents(w)) {
-      w->setAttribute(Qt::WA_Hover, false);
-      w->setAttribute(Qt::WA_OpaquePaintEvent, true);
-    }
-    if (shouldHaveMouseTracking(w)) {
-      w->setMouseTracking(false);
-    }
+  }
+  
+  if (shouldHaveHoverEvents(w)) {
+    w->setAttribute(Qt::WA_Hover, false);
+    w->setAttribute(Qt::WA_OpaquePaintEvent, true);
+  }
+  if (shouldHaveMouseTracking(w)) {
+    w->setMouseTracking(false);
   }
 }
 
