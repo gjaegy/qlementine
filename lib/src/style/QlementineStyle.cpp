@@ -4602,7 +4602,7 @@ int QlementineStyle::styleHint(StyleHint sh, const QStyleOption* opt, const QWid
 
     // FocusFrame
     case SH_FocusFrame_AboveWidget:
-      return false;
+      return true;
 
     // Wizard
     case SH_WizardStyle:
